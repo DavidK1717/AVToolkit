@@ -266,6 +266,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="Resources\Download_grey_16x_24.bmp" />
   </ItemGroup>
   <ItemGroup>

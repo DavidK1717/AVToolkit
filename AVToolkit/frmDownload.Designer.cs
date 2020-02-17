@@ -44,6 +44,7 @@
             this.mergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.normaliseLoudnessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,7 +58,6 @@
             this.btnCreateGif = new System.Windows.Forms.Button();
             this.btnMerge = new System.Windows.Forms.Button();
             this.btnNormaliseLoudness = new System.Windows.Forms.Button();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -100,14 +100,14 @@
             // toAudioToolStripMenuItem
             // 
             this.toAudioToolStripMenuItem.Name = "toAudioToolStripMenuItem";
-            this.toAudioToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.toAudioToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.toAudioToolStripMenuItem.Text = "To Audio";
             this.toAudioToolStripMenuItem.Click += new System.EventHandler(this.toAudioToolStripMenuItem_Click);
             // 
             // videoToolStripMenuItem
             // 
             this.videoToolStripMenuItem.Name = "videoToolStripMenuItem";
-            this.videoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.videoToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.videoToolStripMenuItem.Text = "Video";
             this.videoToolStripMenuItem.Click += new System.EventHandler(this.videoToolStripMenuItem_Click);
             // 
@@ -153,7 +153,7 @@
             // animatedGifToolStripMenuItem
             // 
             this.animatedGifToolStripMenuItem.Name = "animatedGifToolStripMenuItem";
-            this.animatedGifToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.animatedGifToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.animatedGifToolStripMenuItem.Text = "Animated Gif";
             this.animatedGifToolStripMenuItem.Click += new System.EventHandler(this.animatedGifToolStripMenuItem_Click);
             // 
@@ -179,6 +179,13 @@
             this.normaliseLoudnessToolStripMenuItem.Text = "Normalise Loudness";
             this.normaliseLoudnessToolStripMenuItem.Click += new System.EventHandler(this.normaliseLoudnessToolStripMenuItem_Click);
             // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -190,7 +197,7 @@
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
             this.settingsToolStripMenuItem1.Text = "Settings";
             this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
@@ -321,13 +328,6 @@
             this.btnNormaliseLoudness.UseVisualStyleBackColor = false;
             this.btnNormaliseLoudness.Click += new System.EventHandler(this.normaliseLoudnessToolStripMenuItem_Click);
             // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
             // frmDownload
             // 
             this.AllowDrop = true;
@@ -344,7 +344,7 @@
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "AV Suite";
+            this.Text = "AV Toolkit";
             this.Shown += new System.EventHandler(this.frmDownload_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
