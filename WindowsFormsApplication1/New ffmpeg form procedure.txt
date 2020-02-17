@@ -1,0 +1,314 @@
+﻿1) Decide which form to inherit from
+
+2) Add new controls if required.
+
+3) Create new subclass of Operation if required (e.g. if extra input files are needed):
+======================================================================================
+[this is a bad example because Conversion adds no new functionality]
+
+public class Conversion : Operation
+{        
+    public Conversion(string inputFilePath) : base(inputFilePath) { }
+}
+
+4) Use the following code from frmExtractImage as a template:
+
+In form constructor:
+====================
+
+codecs = new string[] { "jpg", "png", "ppm" };
+codec_extensions = new string[] { "jpg", "png", "ppm" };
+
+Methods to override
+===================
+
+protected override void InstantiateOperationObject()
+{
+    base.InstantiateOperationObject();
+
+    operation = new Conversion(txtFile.Text);
+}
+
+protected override void LoadFileTypesCombo()
+{
+    cboFileType.Items.Clear();
+
+    for (int i = 0; i < codecs.Count(); i++)
+    {
+        cboFileType.Items.Add(codecs[i]);
+    }
+    cboFileType.SelectedIndex = 0;
+}
+ 
+
+protected override void SetControlDefaults()
+{
+    base.SetControlDefaults();
+
+    // default start time is start of video
+    txtStartTime.Text = "00:00:00";
+}
+
+protected override void LoadCodecSpecificControls()
+{
+    base.LoadCodecSpecificControls();
+
+    LoadCombos();
+}
+
+        protected override void FfmpegParamUpdate()
+        {
+
+            //MessageBox.Show("UpdateFfmpegParam");       
+
+           
+            string strParam = null;
+
+            // has the output file path changed? If so we need to tell the OutputFile object.                
+
+            if (txtOutputFileName.Text != operation.OutputFile.OutputFilePath)
+                operation.OutputFile.OutputFilePath = txtOutputFileName.Text;
+                
+            strParam = operation.OutputFile.Codec.GetParameterString(operation.InputFile.InputFilePath,
+                operation.OutputFile.OutputFilePath, txtStartTime.Text, cboWidth.SelectedItem.ToString());
+
+            // -loglevel can be "quiet" "panic" "fatal" "error" "warning" "info" "verbose" "debug" "trace"
+#if (DEBUG)
+            strParam = strParam += " -loglevel debug";
+#endif
+            txtParam.Text = strParam;
+
+            toolTip1.SetToolTip(txtParam, txtParam.Text);
+            
+        }
+
+protected override void PerformOperation()  // from frmExtractImage
+{        
+    ffmpeg = new FfmpegExtractImage(txtParam.Text);
+
+    //ffmpeg.FfmpegProgressChanged
+    //    += new EventHandler<ProgEventArgs>((sender2, e1) => Ffmpeg_ProgressChanged(sender2, e1));
+
+    //ffmpeg.FfmpegFinished += Ffmpeg_Finished;
+    //ffmpeg.FfmpegStarted += Ffmpeg_Started;
+
+    ffmpeg.ExecuteAsync();
+}
+
+protected override void PerformOperation() // from frmConvertToAudio
+{
+    base.PerformOperation();
+
+    if (bitRateEncoding == null)
+    {
+        MessageBox.Show("Please select either VBR, ABR or CBR.");
+    }
+    else
+    {
+        long fileDur = (Int64)operation.InputFile.Duration;
+        // from https://forums.creativecow.net/thread/291/286
+        long outputFileSize = (128000 / 8) * fileDur; // in bytes
+
+        //FfmpegConvertToAudio ffmpeg = new FfmpegConvertToAudio(txtParam.Text, outputFileSize);
+        ffmpeg = new FfmpegConvertToAudio(txtParam.Text, outputFileSize);
+
+        ffmpeg.FfmpegProgressChanged
+            += new EventHandler<ProgEventArgs>((sender2, e1) => Ffmpeg_ProgressChanged(sender2, e1));
+
+        ffmpeg.FfmpegFinished += Ffmpeg_Finished;
+        ffmpeg.FfmpegStarted += Ffmpeg_Started;
+
+        ffmpeg.ExecuteAsync();
+    }
+}
+
+protected override bool SuccessTest()
+{
+    //return base.SuccessTest();
+
+    return System.IO.File.Exists(txtOutputFileName.Text);
+}
+
+protected override string MessageOnFailure()
+{
+    //return base.MessageOnFailure();
+
+    string message = "Output file was not created." + Environment.NewLine
+                + "FFMPEG reported: " + Environment.NewLine
+                + ffmpeg.GetErrorLine();
+
+    return message;
+}
+
+If base class ffmpeg event handlers are not suitable then override them:
+=======================================================================
+
+protected override void Ffmpeg_ProgressChanged(object sender, ProgEventArgs e)
+{
+
+    // update progress bar and label.
+    // see https://www.youtube.com/watch?v=TnG3urCD_m0 also downloaded code
+    try
+    {
+        // Invoke is needed to prevent error when control is accessed from a thread other than
+        // the thread it was created on.
+        Invoke(new MethodInvoker(delegate ()
+        {
+            int progPercent = (int)e.ProgPercentage;
+            if (progPercent <= 100)
+            {
+                progressBar1.Value = (int)e.ProgPercentage;
+                progressBar1.Update();
+                lblProgress.Text = $"{string.Format("{0:0.##}", e.ProgPercentage)}%";
+            }
+
+        }));
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show(ex.Message, "Error");
+    }
+}
+
+protected override void Ffmpeg_Started(object sender, EventArgs e)
+{
+    try
+    {
+        // Invoke is needed to prevent error when control is accessed from a thread other than
+        // the thread it was created on.
+        Invoke(new MethodInvoker(delegate ()
+        {
+            progressBar1.Value = 0;
+            progressBar1.Update();
+            progressBar1.Show();
+
+            lblProgress.Text = "";
+        }));
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show(ex.Message, "Error");
+    }
+}
+
+protected override void Ffmpeg_Finished(object sender, EventArgs e)
+{
+    try
+    {
+
+        // Invoke is needed to prevent error when control is accessed from a thread other than
+        // the thread it was created on.
+        Invoke(new MethodInvoker(delegate ()
+        {
+            progressBar1.Value = 100;
+            progressBar1.Update();
+
+            // does file exist?
+            if (SuccessTest())
+            {
+                lblProgress.Text = "Done";
+            }
+            else
+            {
+                lblProgress.Text = "Failed";
+                string message = MessageOnFailure();
+                MessageBox.Show(message);
+            }
+        }));
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show(ex.Message, "Error");
+    }
+}
+
+New methods:
+============
+
+protected void LoadCombos()
+{
+    Codec codec = operation.OutputFile.Codec;
+
+    cboWidth.Items.Clear();
+            
+    for (int i = 0; i < codec.ImageWidths.Length; i++)
+    {
+        string item = codec.ImageWidths[i];
+        cboWidth.Items.Add(item);                
+    }
+    cboWidth.SelectedIndex = 0;			                        
+}
+
+Validation if required:
+======================
+
+protected bool ValidateStartTime()
+{
+    bool status = true;
+    if (!Helper.IsValidTime(txtStartTime.Text))
+    {
+        errorProvider1.SetError(txtStartTime, "Please enter the time in the format hh:mm:ss ");
+        status = false;
+    }
+    else
+        errorProvider1.SetError(txtStartTime, "");
+    return status;
+}
+
+private void txtStartTime_Validating(object sender, CancelEventArgs e)
+{
+    this.ValidateStartTime();
+}
+
+Event handlers for new controls:
+===============================
+
+private void cboWidth_SelectedIndexChanged(object sender, EventArgs e)
+{
+    if (!fileLoading)
+        UpdateFfmpegParam();
+}
+
+private void txtStartTime_TextChanged(object sender, EventArgs e)
+{
+    this.param_entryChanged(sender, e);
+}
+
+5) Attach new event handlers to controls in design view.
+
+6) Creat new Codec class if required:
+=====================================
+
+class Mjpg : Codec
+{
+    public Mjpg() : base()
+    {
+        this.ImageWidths =
+            new string[5] { "1600", "1152", "1024", "800", "640" };
+           
+    }
+
+    public override string GetParameterString(string inputFilePath, string outputFilePath, string startTime, string scale)
+    {
+        return NO_BANNER + "-ss " + startTime + " -i " + "\"" + inputFilePath + "\"" 
+            + " -vf scale=" + scale + ":-1 -vframes 1 " + "\"" + outputFilePath + "\"";
+    }
+}
+
+7) If GetParameterString of new codec class method needs a signature that is not in base class Codec then add it to Codec class:
+================================================================================================================================
+
+public virtual string GetParameterString(string inputFilePath, string outputFilePath, string imageTime, string scale) { return ""; }
+
+8) In OutputFile class constructor add new entry in Switch for new codec class:
+===============================================================================
+
+case "jpg":
+case "png":
+case "ppm":
+    {
+        _codec = new Mjpg();
+        _codec.Extension = "." + codecName;
+        break;
+    }
+

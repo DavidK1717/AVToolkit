@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VD.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DownloadFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\vids</Value>
+    </Setting>
+    <Setting Name="DownloadListMaximum" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="FfmpegFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\FFMPEG64\bin</Value>
+    </Setting>
+    <Setting Name="FfprobeFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\FFMPEG64\bin</Value>
+    </Setting>
+    <Setting Name="FfmpegFolder2" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DefaultForm" Type="System.String" Scope="User">
+      <Value Profile="(Default)">frmConvertToAudio</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

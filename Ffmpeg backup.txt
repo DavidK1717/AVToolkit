@@ -1,0 +1,219 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+
+namespace VD
+{
+    public class FfmpegConvertToAudio
+    {
+        private string _param;
+        private string _result;
+        private long _outputFileSize;
+        private string _path;
+        private List<string> lines; // used if an error occurs
+        private readonly string EXE_NAME = "Ffmpeg";
+        private readonly string FFMPEG_PATH = Properties.Settings.Default["FfmpegFolder"].ToString() == "" ?
+                        Path.GetDirectoryName(Application.ExecutablePath) :
+                        Properties.Settings.Default["FfmpegFolder"].ToString();
+
+        public string Param { get => _param; set => _param = value; }
+        public long OutputFileSize { get => _outputFileSize; set => _outputFileSize = value; }
+        public List<string> Lines { get => lines; set => lines = value; }
+
+        public FfmpegConvertToAudio(string param, long outputFileSize, string filePath)
+        {
+            _param = param;
+            _outputFileSize = outputFileSize;
+            _path = Path.Combine(filePath, EXE_NAME);
+            lines = new List<string>();
+        }
+
+        public FfmpegConvertToAudio(string filePath)
+        {
+            _path = Path.Combine(filePath, EXE_NAME);
+        }
+
+        public FfmpegConvertToAudio(string param, long outputFileSize)
+        {
+            _param = param;
+            _outputFileSize = outputFileSize;
+            _path = Path.Combine(FFMPEG_PATH, EXE_NAME);
+            lines = new List<string>();
+        }
+
+        public FfmpegConvertToAudio()
+        {
+            _path = Path.Combine(FFMPEG_PATH, EXE_NAME);
+        }
+
+        public event EventHandler<ProgEventArgs> FfmpegProgressChanged;
+        public event EventHandler FfmpegFinished;
+        public event EventHandler FfmpegStarted;
+
+        public string GetErrorLine()
+        {
+            if (lines.Count > 0)
+            {
+                return lines.Last();
+            }
+            else
+                return "Empty";
+
+        }
+
+        public void Execute()
+        {
+            this.OnFfmpegStarted(EventArgs.Empty);
+
+            Process proc = new Process();
+            proc.StartInfo.FileName = _path;
+            proc.StartInfo.Arguments = _param;
+            proc.StartInfo.RedirectStandardError = true;
+            proc.StartInfo.RedirectStandardOutput = true;
+            proc.StartInfo.UseShellExecute = false;
+            proc.StartInfo.CreateNoWindow = true;
+
+            if (!proc.Start())
+            {
+                Console.WriteLine("Error starting");
+                // throw error?
+                return;
+            }
+
+            ParseOutput(proc);
+
+            proc.WaitForExit();
+            proc.Close();
+
+            this.OnFfmpegFinished(EventArgs.Empty);
+        }
+
+        private void ParseOutput(Process proc)
+        {
+            bool cancel = false;
+            StreamReader reader = proc.StandardError;
+
+            string line;
+
+            while (!cancel && (line = reader.ReadLine()) != null)
+            {
+                Lines.Add(line);
+                if (line.Length > 3)
+                {
+#if (DEBUG)
+                    Console.WriteLine(line);
+#endif
+                    if (line.Substring(0, 4).TrimStart() == "size")
+                    {
+                        Match m = Regex.Match(line, @"\d+");
+                        if (m.Success)
+                        {
+#if (DEBUG)
+                            Console.WriteLine(m.Value);
+#endif
+                            Double bytesSoFar = Double.Parse(m.Value);
+
+                            double percentage = (bytesSoFar / _outputFileSize) * 100000;
+
+                            var eventArgs = new ProgEventArgs(percentage);
+
+                            if (this.FfmpegProgressChanged != null)
+                            {
+                                this.FfmpegProgressChanged(this, eventArgs);
+
+                                if (eventArgs.Cancel)
+                                {
+                                    cancel = true;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+            }
+        }
+
+        public void Execute(bool all)
+        {
+            Process proc = new Process();
+            proc.StartInfo.FileName = _path;
+            proc.StartInfo.Arguments = _param;
+            proc.StartInfo.RedirectStandardError = true;
+            proc.StartInfo.RedirectStandardOutput = true;
+            proc.StartInfo.UseShellExecute = false;
+            proc.StartInfo.CreateNoWindow = true;
+
+            if (!proc.Start())
+            {
+                Console.WriteLine("Error starting");
+                // throw error?
+                return;
+            }
+
+            //StreamReader reader = proc.StandardOutput;
+            StreamReader reader = proc.StandardError;
+
+            if (all)
+            {
+                // we want all the output
+                _result = reader.ReadToEnd();
+            }
+            else
+            {
+                // we just want the last line of the output
+                string line;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    _result = line;
+                }
+
+            }
+
+            proc.WaitForExit();
+            proc.Close();
+        }
+
+        protected void OnFfmpegFinished(EventArgs e)
+        {
+            if (this.FfmpegFinished != null)
+            {
+                this.FfmpegFinished(this, e);
+            }
+        }
+
+        protected void OnFfmpegStarted(EventArgs e)
+        {
+            if (this.FfmpegStarted != null)
+            {
+                this.FfmpegStarted(this, e);
+            }
+        }
+
+        /// <summary>
+        /// Check if a particular library is compiled in ffmpeg eg libfdk_aac
+        /// </summary>
+        /// <param name="library"></param>
+        /// <returns>bool</returns>
+        public bool IsEnabled(string library)
+        {
+            _param = "-buildconf";
+
+            this.Execute(true);
+
+            if (_result.Contains(library))
+                return true;
+            else
+                return false;
+
+        }
+    }
+}
+

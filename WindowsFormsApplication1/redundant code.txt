@@ -1,0 +1,507 @@
+//[DllImport("User32.dll", CharSet = CharSet.Auto)]
+        //public static extern IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
+
+        //[DllImport("User32.dll", CharSet = CharSet.Auto)]
+        //public static extern bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
+
+        ////private const int WM_PASTE = 0x0302;
+        //private const int WM_PASTE = 770;
+        //private const int WM_DRAWCLIPBOARD = 0x0308;        // WM_DRAWCLIPBOARD message
+        //private IntPtr _clipboardViewerNext;                // Our variable that will hold the value to identify the next window 
+                                                            // in the clipboard viewer chain
+
+================================================================================
+
+public frmDownload()
+        {
+            InitializeComponent();
+
+            //_clipboardViewerNext = SetClipboardViewer(this.Handle);      // Adds our form to the chain of clipboard viewers
+            //Clipboard.Clear();
+
+            _max_rows = (Int32)Properties.Settings.Default["DownloadListMaximum"];
+
+            
+        }
+
+===================================================================
+
+//protected override void WndProc(ref Message m)
+        //{
+        //    base.WndProc(ref m);    // Process the message                        
+
+            //if (m.Msg == WM_DRAWCLIPBOARD)
+            //{
+            //    IDataObject iData = Clipboard.GetDataObject();      // Clipboard's data
+
+            //    if (iData.GetDataPresent(DataFormats.Text))
+            //    {
+            //        string text = (string)iData.GetData(DataFormats.Text);      // Clipboard text
+            //        MessageBox.Show(text);                                                            
+            //    }
+            //    else if (iData.GetDataPresent(DataFormats.Bitmap))
+            //    {
+            //        Bitmap image = (Bitmap)iData.GetData(DataFormats.Bitmap);   // Clipboard image
+            //                                                                    // do something with it
+            //    }
+            //}
+
+            //if (m.Msg != WM_PASTE)
+            //{
+            //    IDataObject iData = Clipboard.GetDataObject();
+
+            //    if (iData.GetDataPresent(DataFormats.Text))
+            //    {
+            //        string text = (string)iData.GetData(DataFormats.Text);
+            //        MessageBox.Show(text);
+            //    }
+            //}
+
+            //if (m.Msg != WM_PASTE)
+            //{
+            //    // Handle all other messages normally
+            //    base.WndProc(ref m);
+            //}
+            //else
+            //{
+            //    IDataObject iData = Clipboard.GetDataObject();
+            //    string text = (string)iData.GetData(DataFormats.Text);
+            //    MessageBox.Show(text);
+            //}
+        //}
+
+=============================================================================
+
+//public void AddUrlToDownloadListAsync(string url)
+        //{
+        //    BackgroundWorker bw = new System.ComponentModel.BackgroundWorker();
+
+                      
+        //    frmEndlessProgressBar frm = new frmEndlessProgressBar();
+        //    frm.label1.Text = "Adding video to list";
+        //    frm.label2.Text = "Please wait";
+
+        //    //if (this._parentForm != null)
+        //    //{
+        //    //    frm.MdiParent = this._parentForm;
+        //    //}
+        //    //else
+        //    //{
+        //    //    frm.MdiParent = Application.OpenForms[0];
+        //    //}
+            
+        //    bw.DoWork += (sender1, args) =>
+        //    {
+        //        // this will happen in a separate thread
+        //        args.Result = AddUrlToDownloadList(txtUrl.Text);
+        //    };
+
+        //    bw.RunWorkerCompleted += (sender1, args) =>
+        //    {
+        //        if (args.Error != null)  // if an exception occurred during DoWork,
+        //            MessageBox.Show(args.Error.ToString());  
+        //        else
+        //        {
+        //            // This happens in the main UI thread.
+        //            frm.Close();
+        //        }
+        //    };
+
+        //    frm.Show();
+        //    bw.RunWorkerAsync();
+        //}
+
+=====================================================================
+
+
+            //ytv.Cb = cb;
+            //ytv.Btn = btn;
+            //ytv.Lbl = lblProgress;
+			
+====================================================================
+
+private void btnFolder_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DialogResult result = folderBrowserDialog1.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserDialog1.SelectedPath))
+                {
+                    dls.DownloadFolder = folderBrowserDialog1.SelectedPath;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
+
+===========================================================================		
+private void Form3_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //ChangeClipboardChain(this.Handle, _clipboardViewerNext);        // Removes our from the chain of clipboard viewers when the form closes.
+        }
+
+==========================		
+
+private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Clipboard.ContainsText())
+            {
+                //cpbUrl.PastedText = Clipboard.GetText();
+                //cpbUrl.Paste(Clipboard.GetText());
+                AddUrlToDownloadList(Clipboard.GetText());
+
+            }
+        }
+
+=========================================
+
+//using Google.Apis.YouTube.v3.Data;
+
+============================		
+
+ bw.RunWorkerCompleted += (sender1, args) =>
+                {
+                    if (args.Error != null)  // if an exception occurred during DoWork,
+                        MessageBox.Show(args.Error.ToString());  // do your error handling here
+                        //ExceptionDispatchInfo.Capture(args.Error).Throw();
+                    else
+                    {
+                        
+                        // This happens in the main UI thread.
+                        //Cb.Enabled = false;
+                        //Lbl.Text = "Done";
+                        //Btn.AccessibleName = "P";
+                        //Btn.Image = Resource1.PlayVideo_16x;
+                    }
+
+                };
+				
+====================================================
+private static long AudioDuration(string FileFullPath)
+        {
+            TagLib.File file = TagLib.File.Create(FileFullPath);
+            return (long)file.Properties.Duration.TotalSeconds;             
+        }
+
+
+
+//long fileDur = AudioDuration(txtFile.Text); // in seconds
+
+====================================================
+
+private void UpdateFfmpegParam()
+        {
+            MessageBox.Show("UpdateFfmpegParam");       
+
+            if (bitRateEncoding == null)
+            {
+                MessageBox.Show("Please select either VBR, ABR or CBR.");
+            }
+            else
+            {
+                string strParam = null;
+                string initialOption = "-hide_banner ";
+
+                outputFilePath = txtOutputFileName.Text;
+
+                if (cboFileType.SelectedIndex == FILE_TYPE_MP3)
+                {
+
+                    if (bitRateEncoding == "CBR")
+                    {
+                        strParam = initialOption + "-i " + "\"" + inputFilePath + "\"" + " -codec:a libmp3lame -b:a "
+                            + ((ComboBoxItem)cboOutputBitRateCBR.SelectedItem).HiddenValue.ToString()
+                            + "k -vn " + "\"" + outputFilePath + "\"";
+                    }
+                    else if (bitRateEncoding == "VBR")
+                    {
+                        strParam = initialOption + "-i " + "\"" + inputFilePath + "\"" + " -codec:a libmp3lame -q:a "
+                            + ((ComboBoxItem)cboOutputBitRateVBR.SelectedItem).HiddenValue.ToString()
+                            + " " + "\"" + outputFilePath + "\"";
+
+                    }
+                    else // ABR
+                    {
+                        strParam = initialOption + "-i " + "\"" + inputFilePath + "\"" + " -codec:a libmp3lame -abr 1 -b:a "
+                            + ((ComboBoxItem)cboOutputBitRateABR.SelectedItem).HiddenValue.ToString()
+                            + "k -vn " + "\"" + outputFilePath + "\"";
+                    }
+                }
+                else if (cboFileType.SelectedIndex == FILE_TYPE_AAC)
+                {
+                    if (!libfdk_acc_check_done)
+                    {
+                        Ffmpeg ffm = new Ffmpeg();
+                        if (ffm.IsEnabled(PREFERRED_AAC_LIBRARY))
+                            libfdk_acc_enabled = true;
+
+                        libfdk_acc_check_done = true;
+                    }
+
+                    if (libfdk_acc_enabled)
+                    {
+                        MessageBox.Show("Enabled");
+
+                        // Examples from https://trac.ffmpeg.org/wiki/Encode/AAC
+                        //Constant Bit Rate (CBR) mode
+                        //Convert and audio file to AAC in an M4A(MP4) container:
+                        //ffmpeg - i input.wav - c:a libfdk_aac -b:a 128k output.m4a
+                        //  Convert 5.1 surround sound audio of a video, leaving the video alone:
+                        //ffmpeg - i input.mp4 - c:v copy -c:a libfdk_aac -b:a 384k output.mp4
+                        //  Convert the video with libx264, with a target of fitting a 90 - minute movie on a 700MB(= 5734400kb) CD - ROM, mixing the audio down to two channels(Windows users should use NUL rather than / dev / null):
+                        //ffmpeg - y - i input.mp4 - c:v libx264 -b:v 933k - preset:v veryfast -pass 1 - an / dev / null && \
+                        //ffmpeg - i input.mp4 - c:v libx264 -b:v 933k - preset:v veryfast -pass 2 \
+                        //-ac 2 - c:a libfdk_aac -b:a 128k output.mp4
+                        // Variable Bit Rate (VBR) mode 
+                        // Target a quality, rather than a specific bit rate. 1 is lowest quality and 5 is highest quality. Set the VBR level with the -vbr flag.
+                        //VBR kbps/channel    AOTs
+                        //1   20 - 32   LC,HE,HEv2
+                        //2   32 - 40   LC,HE,HEv2
+                        //3   48 - 56   LC,HE,HEv2
+                        //4   64 - 72   LC
+                        //5   96 - 112  LC
+                        // details: http://wiki.hydrogenaud.io/index.php?title=Fraunhofer_FDK_AAC#Bitrate_Modes
+                        //Convert an audio file to AAC in an M4A(MP4) container:
+                        //ffmpeg - i input.wav - c:a libfdk_aac -vbr 3 output.m4a
+                        //  Convert the audio only of a video:
+                        //ffmpeg - i input.mp4 - c:v copy -c:a libfdk_aac -vbr 3 output.mp4
+                        //  Convert the video with libx264, and mix down audio to two channels:
+                        //ffmpeg - i input.mp4 - c:v libx264 -crf 22 - preset:v veryfast \
+                        //-ac 2 - c:a libfdk_aac -vbr 3 output.mp4
+
+
+                    }
+                    else  // USE NATIVE AAC ENCODER
+
+                    {
+                        MessageBox.Show("Not Enabled");
+                        if (bitRateEncoding == "CBR")
+                        {
+                            strParam = initialOption + "-i " + "\"" + inputFilePath + "\"" + " -codec:a aac -b:a "
+                                + ((ComboBoxItem)cboOutputBitRateCBR.SelectedItem).HiddenValue.ToString()
+                                + "k -vn " + "\"" + outputFilePath + "\"";
+                        }
+                        else if (bitRateEncoding == "VBR")
+                        {
+                            strParam = initialOption + "-i " + "\"" + inputFilePath + "\"" + " -codec:a aac -q:a "
+                                + ((ComboBoxItem)cboOutputBitRateVBR.SelectedItem).HiddenValue.ToString()
+                                + " " + "\"" + outputFilePath + "\"";
+
+                        }
+                        else
+                        {
+                            strParam = initialOption + "-i " + "\"" + inputFilePath + "\"" + " -codec:a aac -abr 1 -b:a "
+                                + ((ComboBoxItem)cboOutputBitRateABR.SelectedItem).HiddenValue.ToString()
+                                + "k -vn " + "\"" + outputFilePath + "\"";
+                        }
+
+                    }
+                }
+                else
+                {
+                    // should never get here
+                    return;
+                }
+
+                // -loglevel can be "quiet" "panic" "fatal" "error" "warning" "info" "verbose" "debug" "trace"
+#if (DEBUG)
+                strParam = strParam += " -loglevel debug";
+#endif
+                txtParam.Text = strParam;
+            }
+        }
+
+===================================================
+
+ //switch (formatCode)                        {
+                //    case 5:
+                //        item = "FLV 240p - MP3 64K";
+                //        break;
+                //    case 6:
+                //        item = "FLV 270p - MP3 64K";
+                //        break;
+                //    case 13:
+                //        item = "13";
+                //        break;
+                //    case 17:
+                //        item = "3GP 144p - AAC 24K";
+                //        break;
+                //    case 18:
+                //        item = "MP4 360p - AAC 96K";
+                //        break;
+                //    case 22:
+                //        item = "MP4 720p HD - AAC 192K";
+                //        break;
+                //    case 34:
+                //        item = "FLV 360p - MP3 128K";
+                //        break;
+                //    case 35:
+                //        item = "FLV 480p - MP3 128K";
+                //        break;
+                //    case 36:
+                //        item = "3GP 240p - AAC 38K";
+                //        break;
+                //    case 37:
+                //        item = "MP4 1080p HD - AAC 192K";
+                //        break;
+                //    case 38:
+                //        item = "MP4 3072p 6K - AAC 192K";
+                //        break;
+                //    case 43:
+                //        item = "WEBM 360p - OGG 128K";
+                //        break;
+                //    case 44:
+                //        item = "WEBM 480p - OGG 128K";
+                //        break;
+                //    case 45:
+                //        item = "WEBM 720p HD - OGG 192K";
+                //        break;
+                //    case 46:
+                //        item = "WEBM 1080p HD - OGG 192K";
+                //        break;
+                //    case 82:
+                //        item = "3D MP4 360p - AAC 96K";
+                //        break;
+                //    case 83:
+                //        item = "3D MP4 240p - AAC 96K";
+                //        break;
+                //    case 84:
+                //        item = "3D MP4 720p HD - AAC 96K";
+                //        break;
+                //    case 85:
+                //        item = "3D MP4 520p - AAC 96K";
+                //        break;
+                //    case 100:
+                //        item = "3D WEBM 360p - OGG 128K";
+                //        break;
+                //    case 101:
+                //        item = "3D WEBM 360p - OGG 192K";
+                //        break;
+                //    case 102:
+                //        item = "3D WEBM 720p HD - OGG 192K";
+                //        break;
+                //    case 133:
+                //        item = "MP4 240p video-only";
+                //        break;
+                //    case 134:
+                //        item = "MP4 360p video-only";
+                //        break;
+                //    case 135:
+                //        item = "MP4 480p video-only";
+                //        break;
+                //    case 136:
+                //        item = "MP4 720p HD video-only";
+                //        break;
+                //    case 137:
+                //        item = "MP4 1080p HD video-only";
+                //        break;
+                //    case 138:
+                //        item = "MP4 2160p 4K video-only Low bitrate";
+                //        break;
+                //    case 160:
+                //        item = "MP4 144p video-only";
+                //        break;
+                //    case 242:
+                //        item = "WEBM 240p video-only Low bitrate";
+                //        break;
+                //    case 243:
+                //        item = "WEBM 360p video-only Low bitrate";
+                //        break;
+                //    case 244:
+                //        item = "WEBM 480p video-only Low bitrate";
+                //        break;
+                //    case 247:
+                //        item = "WEBM 720p HD video-only Low bitrate";
+                //        break;
+                //    case 248:
+                //        item = "WEBM 1080p HD video-only Low bitrate";
+                //        break;
+                //    case 264:
+                //        item = "MP4 1440p video-only";
+                //        break;
+                //    case 271:
+                //        item = "WEBM 1440p video-only Low bitrate";
+                //        break;
+                //    case 272:
+                //        item = "WEBM 4320p60 8K video-only";
+                //        break;
+                //    case 278:
+                //        item = "WEBM 144p video-only Low bitrate";
+                //        break;
+                //    case 139:
+                //        item = "M4A Audio-only - AAC 48K";
+                //        break;
+                //    case 140:
+                //        item = "M4A Audio-only - AAC 128K";
+                //        break;
+                //    case 141:
+                //        item = "M4A Audio-only - AAC 256K";
+                //        break;
+                //    case 171:
+                //        item = "WEBM Audio-only - OGG 128K";
+                //        break;
+                //    case 172:
+                //        item = "WEBM Audio-only - OGG 192K";
+                //        break;
+                //    case 251:
+                //        item = "WEBM Audio-only - OPUS 160K";
+                //        break;
+                //    case 250:
+                //        item = "WEBM Audio-only - OPUS 70K";
+                //        break;
+                //    case 249:
+                //        item = "WEBM Audio-only - OPUS 50K";
+                //        break;
+                //    case 313:
+                //        item = "WEBM 2160p30 6K video-only";
+                //        break;
+                //    case 315:
+                //        item = "WEBM 2160p60 6K video-only High bitrate";
+                //        break;
+                //    case 303:
+                //        item = "WEBM 1080p60 HD video-only High bitrate";
+                //        break;
+                //    case 308:
+                //        item = "WEBM 1440p60 4K video-only High bitrate";
+                //        break;
+                //    case 302:
+                //        item = "WEBM 720p60 HD video-only High bitrate";
+                //        break;
+                //    case 298:
+                //        item = "MP4 720p60 HD video-only High bitrate";
+                //        break;
+                //    case 299:
+                //        item = "MP4 1080p60 HD video-only";
+                //        break;
+                //    case 337:
+                //        item = "WEBM 2160p60 6K video-only Medium bitrate";
+                //        break;
+                //    case 335:
+                //        item = "WEBM 1080p60 HD video-only Medium bitrate";
+                //        break;
+                //    case 336:
+                //        item = "WEBM 1440p60 4K video-only Medium bitrate";
+                //        break;
+                //    case 334:
+                //        item = "WEBM 720p60 HD  video-only Medium bitrate";
+                //        break;
+                //    case 332:
+                //        item = "WEBM 360p video-only Medium bitrate";
+                //        break;
+                //    case 333:
+                //        item = "WEBM 480p video-only Medium bitrate";
+                //        break;
+                //    case 331:
+                //        item = "WEBM 240p video-only Medium bitrate";
+                //        break;
+                //    case 330:
+                //        item = "WEBM 144p video-only Medium bitrate";
+                //        break;
+                //    default:
+                //        item = "Unknown";
+                //        break;
+                //}				
+		

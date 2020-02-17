@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2E80C57E-70DE-473D-BAB4-64A026B6C103}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AVToolkit</RootNamespace>
+    <AssemblyName>AVToolkit</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Zlib.Portable, Version=1.11.0.0, Culture=neutral, PublicKeyToken=431cba815f6a8b5b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zlib.Portable.Signed.1.11.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Aac.cs" />
+    <Compile Include="BitrateMode.cs" />
+    <Compile Include="Codec.cs" />
+    <Compile Include="Conversion.cs" />
+    <Compile Include="ConvertToAudio.cs" />
+    <Compile Include="ConvertVideo.cs" />
+    <Compile Include="Copy.cs" />
+    <Compile Include="CreateGif.cs" />
+    <Compile Include="ExtractImage.cs" />
+    <Compile Include="ExtractMultipleImages.cs" />
+    <Compile Include="ExtractSection.cs" />
+    <Compile Include="FfInfo.cs" />
+    <Compile Include="Ffmpeg.cs" />
+    <Compile Include="Ffprobe.cs" />
+    <Compile Include="frmConvertToAudio.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmConvertToAudio.Designer.cs">
+      <DependentUpon>frmConvertToAudio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmConvertVideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmConvertVideo.designer.cs">
+      <DependentUpon>FrmConvertVideo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCreateGif.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCreateGif.Designer.cs">
+      <DependentUpon>frmCreateGif.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmDownload.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDownload.Designer.cs">
+      <DependentUpon>frmDownload.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmExtractSection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmExtractSection.Designer.cs">
+      <DependentUpon>frmExtractSection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmExtractImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmExtractImage.Designer.cs">
+      <DependentUpon>frmExtractImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmExtractMultipleImages.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmExtractMultipleImages.Designer.cs">
+      <DependentUpon>frmExtractMultipleImages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMergeAudioVideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMergeAudioVideo.Designer.cs">
+      <DependentUpon>frmMergeAudioVideo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmNormaliseAudio.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmNormaliseAudio.Designer.cs">
+      <DependentUpon>FrmNormaliseAudio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmOperation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmOperation.designer.cs">
+      <DependentUpon>frmOperation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmOperationBitrate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmOperationBitrate.Designer.cs">
+      <DependentUpon>FrmOperationBitrate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmPlay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPlay.Designer.cs">
+      <DependentUpon>frmPlay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmPlay_ffplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPlay_ffplay.Designer.cs">
+      <DependentUpon>frmPlay_ffplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSettings.Designer.cs">
+      <DependentUpon>frmSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gif.cs" />
+    <Compile Include="InputFile.cs" />
+    <Compile Include="jpg.cs" />
+    <Compile Include="libfdk_aac.cs" />
+    <Compile Include="libmp3lame.cs" />
+    <Compile Include="libopus.cs" />
+    <Compile Include="Merge.cs" />
+    <Compile Include="mp4.cs" />
+    <Compile Include="NormaliseAudio.cs" />
+    <Compile Include="Operation.cs" />
+    <Compile Include="OutputFile.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="ProgEventArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StreamType.cs" />
+    <Compile Include="Tools.cs" />
+    <Compile Include="VideoInfoDesc.cs" />
+    <EmbeddedResource Include="frmConvertToAudio.resx">
+      <DependentUpon>frmConvertToAudio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmConvertVideo.resx">
+      <DependentUpon>FrmConvertVideo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCreateGif.resx">
+      <DependentUpon>frmCreateGif.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDownload.resx">
+      <DependentUpon>frmDownload.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmExtractSection.resx">
+      <DependentUpon>frmExtractSection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmExtractImage.resx">
+      <DependentUpon>frmExtractImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmExtractMultipleImages.resx">
+      <DependentUpon>frmExtractMultipleImages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMergeAudioVideo.resx">
+      <DependentUpon>frmMergeAudioVideo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmNormaliseAudio.resx">
+      <DependentUpon>FrmNormaliseAudio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmOperation.resx">
+      <DependentUpon>frmOperation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmOperationBitrate.resx">
+      <DependentUpon>FrmOperationBitrate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPlay.resx">
+      <DependentUpon>frmPlay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPlay_ffplay.resx">
+      <DependentUpon>frmPlay_ffplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSettings.resx">
+      <DependentUpon>frmSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="AxWMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_grey_16x_24.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DeleteListItem_16x_24.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PlayVideo_16x_24.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PlayVideo_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Close_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\OpenFolder_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\OpenFolder_32x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DKUtil\DKUtil.csproj">
+      <Project>{4282af38-2f56-4177-bf0a-0fbf56f1ba1b}</Project>
+      <Name>DKUtil</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Main_banner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ffmpeg.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ffplay.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ffprobe.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="New ffmpeg form procedure.txt" />
+    <Content Include="redundant code.txt" />
+    <None Include="Resources\Banner.bmp" />
+    <Content Include="TODO.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
